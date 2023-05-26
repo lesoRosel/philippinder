@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Modifica Profilo</title>
+    <link rel="stylesheet" type="text/css" href="profile_edit.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Modifica Profilo</h1>
+        <form action="profile_edit.php" method="POST" enctype="multipart/form-data">
+
+            <label for="biografia">Biografia:</label><br>
+            <textarea id="biografia" name="biografia" rows="4" cols="50"></textarea><br>
+
+            <label for="etnia">Etnia:</label><br>
+            <select id="etnia" name="etnia">
+                <option value="filippino">Filippino</option>
+            </select><br>
+
+            <label for="foto">Foto:</label><br>
+            <input type="file" id="foto" name="foto"><br>
+
+            <input type="submit" value="Salva">
+        </form>
+    </div>
+</body>
+</html>

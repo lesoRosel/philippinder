@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Profilo Utente</title>
+    <link rel="stylesheet" type="text/css" href="profile.css">
+</head>
+<body>
+    <div class="profilo">
+        <h1><?php echo $user['nome']; ?></h1>
+        <img src="<?php echo $user['foto']; ?>" alt="Foto Profilo">
+        <p>Data di nascita: <?php echo $user['data_nascita']; ?></p>
+        <p>Biografia: <?php echo $user['biografia']; ?></p>
+    </div>
+</body>
+</html>

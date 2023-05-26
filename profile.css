@@ -1,0 +1,25 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    padding: 20px;
+}
+
+.profilo {
+    width: 30%;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background-color: white;
+}
+
+.profilo h1 {
+    text-align: center;
+}
+
+.profilo img {
+    display: block;
+    margin: auto;
+    width: 50%;
+    height: auto;
+}
