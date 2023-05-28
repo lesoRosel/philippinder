@@ -1,25 +1,39 @@
 body {
     font-family: Arial, sans-serif;
-    background-color: #f0f0f0;
-    padding: 20px;
+    margin: 0;
+    padding: 0;
+    background-color: rgba(255, 0, 0, 0.258);
 }
 
-.profilo {
-    width: 30%;
-    margin: auto;
+.user-profile {
+    width: 80%;
+    margin: 20px auto;
     padding: 20px;
     border: 1px solid #ddd;
     border-radius: 10px;
     background-color: white;
-}
-
-.profilo h1 {
     text-align: center;
 }
 
-.profilo img {
-    display: block;
-    margin: auto;
-    width: 50%;
-    height: auto;
+#img {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+#img img {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.user-profile h1 {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.user-profile p {
+    margin-bottom: 10px;
 }

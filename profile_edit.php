@@ -1,4 +1,5 @@
 <?php
+session_start();
 // Connessione al database PostgreSQL
 $host = "localhost";
 $port = "5432";
@@ -15,11 +16,11 @@ if (!$conn) {
 // Elaborazione del salvataggio dei valori della biografia, etnia e foto
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Ottenere l'ID del profilo dell'utente (sostituisci con la logica appropriata)
-    $id_profilo = 1;
+    $id_profilo = $_SESSION['id_utente'];
 
     // Salvataggio della biografia
     $biografia = isset($_POST['biografia']) ? $_POST['biografia'] : '';
-    $sqlBiografia = "UPDATE Profilo SET biografia = '$biografia' WHERE id_profilo = $id_profilo";
+    $sqlBiografia = "UPDATE profilo SET biografia = '$biografia' WHERE id_profilo = $id_profilo";
     $resultBiografia = pg_query($conn, $sqlBiografia);
 
     if (!$resultBiografia) {
@@ -28,7 +29,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Salvataggio dell'etnia
     $etnia = isset($_POST['etnia']) ? $_POST['etnia'] : '';
-    $sqlEtnia = "UPDATE Profilo SET etnia = '$etnia' WHERE id_profilo = $id_profilo";
+    $sqlEtnia = "UPDATE profilo SET etnia = '$etnia' WHERE id_profilo = $id_profilo";
     $resultEtnia = pg_query($conn, $sqlEtnia);
 
     if (!$resultEtnia) {
@@ -41,39 +42,42 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if (!empty($foto)) {
         // Rimuovi il valore precedente della foto
-        $sqlRimuoviFoto = "UPDATE Profilo SET foto = NULL WHERE id_profilo = $id_profilo";
+        $sqlRimuoviFoto = "UPDATE profilo SET foto = NULL WHERE id_profilo = $id_profilo";
         $resultRimuoviFoto = pg_query($conn, $sqlRimuoviFoto);
 
         if (!$resultRimuoviFoto) {
             echo "Errore nella rimozione del valore precedente della foto: " . pg_last_error($conn);
         }
 
-        // Salva la nuova foto
-        $destinazione = "./uploads/" . $fotoNome;
+        // Genera un nome univoco per la foto
+        $nomeFotoUnivoco = uniqid() . '_' . $fotoNome;
 
-        if (move_uploaded_file($foto, $destinazione)) {
-            $sqlFoto = "UPDATE Profilo SET foto = '$destinazione' WHERE id_profilo = $id_profilo";
+        // Sposta il file nella cartella "uploads"
+        $destinazioneFoto = "uploads/" . $nomeFotoUnivoco;
+        if (move_uploaded_file($foto, $destinazioneFoto)) {
+            // Salva il percorso della foto nella colonna "foto" della tabella "profilo"
+            $sqlFoto = "UPDATE profilo SET foto = '$destinazioneFoto' WHERE id_profilo = $id_profilo";
             $resultFoto = pg_query($conn, $sqlFoto);
 
             if (!$resultFoto) {
                 echo "Errore nell'aggiornamento della foto: " . pg_last_error($conn);
             }
         } else {
-            echo "Errore durante il caricamento del file.";
+            echo "Errore durante il caricamento della foto.";
         }
     }
 
     // Elaborazione del salvataggio dei valori degli interessi
-    $interessiSelezionati = isset($_POST['interessi']) ? $_POST['interessi'] : [];
+    $interessi = ['cinema', 'musica', 'sport', 'lettura', 'viaggi'];
 
-    foreach ($interessiSelezionati as $idInteresse) {
-        $valore = isset($_POST['interesse_' . $idInteresse]) ? true : false;
+    foreach ($interessi as $interesse) {
+        $valore = isset($_POST[$interesse]) && $_POST[$interesse] === 'si' ? 'si' : 'no';
 
-        $sqlInteressi = "UPDATE Interessi SET valore = $valore WHERE id_interesse = $idInteresse";
+        $sqlInteressi = "UPDATE interessi SET $interesse = '$valore' WHERE id_utente = $id_profilo";
         $resultInteressi = pg_query($conn, $sqlInteressi);
 
         if (!$resultInteressi) {
-            echo "Errore nell'aggiornamento dell'interesse con ID $idInteresse: " . pg_last_error($conn);
+            echo "Errore nell'aggiornamento dell'interesse $interesse: " . pg_last_error($conn);
         }
     }
 

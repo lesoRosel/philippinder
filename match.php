@@ -1,56 +1,61 @@
 <?php
 session_start();
 
-// Verifica se l'utente è loggato
-if (!isset($_SESSION['id_utente'])) {
-  die('Devi essere loggato per vedere i tuoi match');
-}
-
-$id_utente = $_SESSION['id_utente'];
-
+// Connetti al database PostgreSQL
 $dbconn = pg_connect("host=localhost dbname=testdb user=user password=password");
 
-if (!$dbconn) {
-  die('Could not connect: ' . pg_last_error());
+// Funzione per ottenere un utente casuale escluso l'utente corrente
+function getRandomUser($currentUser, $dbconn) {
+    // Ottieni l'ID dell'utente corrente e cerca un utente casuale che non sia l'utente corrente
+    $sql = "SELECT id_utente FROM utente WHERE id_utente != $currentUser ORDER BY RANDOM() LIMIT 1";
+    $result = pg_query($dbconn, $sql);
+
+    // Restituisci l'ID dell'utente casuale
+    $randomUser = pg_fetch_assoc($result);
+    return $randomUser['id_utente'];
 }
 
-// Esegue il codice di matching qui (vedi il codice del post precedente)
-// Assumendo che $id_utente contenga l'ID dell'utente attualmente loggato
-$query = "SELECT * FROM interessi WHERE id_utente = $1";
-$result = pg_query_params($dbconn, $query, array($id_utente));
+// Funzione per confrontare gli interessi
+function compareInterests($currentUser, $randomUser, $dbconn) {
+    // Ottieni gli interessi dell'utente corrente
+    $sql1 = "SELECT cinema, musica, sport, lettura, viaggi FROM interessi WHERE id_utente = $currentUser";
+    $result1 = pg_query($dbconn, $sql1);
+    $user1Interests = pg_fetch_assoc($result1);
 
-if (!$result) {
-  die('Errore nella query: ' . pg_last_error($dbconn));
-}
+    // Ottieni gli interessi dell'utente casuale
+    $sql2 = "SELECT cinema, musica, sport, lettura, viaggi FROM interessi WHERE id_utente = $randomUser";
+    $result2 = pg_query($dbconn, $sql2);
+    $user2Interests = pg_fetch_assoc($result2);
 
-$user_interests = pg_fetch_assoc($result);
-
-// Costruisci la query di matching
-$matches_query = "SELECT id_utente FROM interessi WHERE id_utente != $1 AND (";
-$interest_counter = 0;
-
-foreach ($user_interests as $interest => $value) {
-  if ($value && $interest != 'id_utente') {
-    if ($interest_counter >= 1) {
-      $matches_query .= ' + ';
+    // Conta gli interessi in comune
+    $commonInterests = 0;
+    foreach ($user1Interests as $interest => $value) {
+        if ($value == 'si' && $user2Interests[$interest] == 'si') {
+            $commonInterests++;
+        }
     }
-    $matches_query .= "(CASE WHEN $interest = true THEN 1 ELSE 0 END)";
-    $interest_counter++;
-  }
+
+    // Restituisci il numero di interessi in comune
+    return $commonInterests;
 }
 
-$matches_query .= ") >= 2";  // Almeno due interessi in comune
+// Ottieni l'ID dell'utente della sessione corrente
+$currentUser = $_SESSION['id_utente'];
 
-$matches_result = pg_query_params($dbconn, $matches_query, array($id_utente));
+// Ottieni un utente casuale che non sia l'utente corrente
+$randomUser = getRandomUser($currentUser, $dbconn);
 
-if (!$matches_result) {
-  die('Errore nella query: ' . pg_last_error($dbconn));
+// Confronta gli interessi dell'utente corrente con quelli dell'utente casuale
+$commonInterests = compareInterests($currentUser, $randomUser, $dbconn);
+
+// Se ci sono almeno 2 interessi in comune, è un match
+if ($commonInterests >= 2) {
+    echo "It's a match!";
+} else {
+    echo "No match.";
 }
 
-$matches = pg_fetch_all_columns($matches_result);
-
-echo "Gli utenti con almeno due interessi in comune sono: " . implode(', ', $matches);
-
-
+// Chiudi la connessione
 pg_close($dbconn);
+
 ?>
