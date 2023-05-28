@@ -1,0 +1,9 @@
+
+Utente (id_utente{PK}, nome, data_di_nascita, email, password)
+
+Profilo (id_profilo{PK}, id_utente{FK}, biografia, etnia, foto)
+
+Interessi (id_interessi{PK}, id_utente{FK}, cinema, musica, sport, lettura, viaggi)
+
+Match (id_match{PK}, id_utente1{FK}, id_utente2{FK}, data)
+
