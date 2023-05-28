@@ -6,7 +6,7 @@
 </head>
 <body>
     <header>
-        <h1>Benvenuto al nostro sito di incontri!</h1>
+        <h1>Sito di incontri per Ching Chong People</h1>
     </header>
 
     <main>
@@ -26,7 +26,7 @@
             }
 
             // Seleziona un profilo casuale dalla tabella utente
-            $sqlRandomProfilo = "SELECT utente.id_utente, utente.nome, utente.data_nascita, profilo.foto FROM utente INNER JOIN profilo ON utente.id_profilo = profilo.id_profilo ORDER BY RANDOM() LIMIT 1";
+            $sqlRandomProfilo = "SELECT utente.nome, utente.data_nascita, profilo.foto, utente.id_utente FROM utente INNER JOIN profilo ON utente.id_utente = profilo.id_profilo ORDER BY RANDOM() LIMIT 1";
             $resultRandomProfilo = pg_query($conn, $sqlRandomProfilo);
 
             if ($rowProfilo = pg_fetch_assoc($resultRandomProfilo)) {
@@ -36,6 +36,7 @@
                 echo "<img src='" . $rowProfilo['foto'] . "' alt='Foto profilo'>";
 
                 // ID dell'utente loggato
+                session_start();
                 $idUtenteLoggato = $_SESSION['id_utente'];
                 // ID dell'utente randomizzato
                 $idUtenteRandomizzato = $rowProfilo['id_utente'];
@@ -43,7 +44,7 @@
                 // Aggiungi il match nel database al click del pulsante "Mi Piace"
                 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['miPiace'])) {
                     // Inserisci il match nella tabella "Match"
-                    $sqlInsertMatch = "INSERT INTO Match (id_utente_loggato, id_utente_match) VALUES ($idUtenteLoggato, $idUtenteRandomizzato)";
+                    $sqlInsertMatch = "INSERT INTO \"Match\" (id_utente_loggato, id_utente_match) VALUES ($idUtenteLoggato, $idUtenteRandomizzato)";
                     $resultInsertMatch = pg_query($conn, $sqlInsertMatch);
 
                     if ($resultInsertMatch) {
@@ -61,11 +62,16 @@
         </div>
 
         <form method="post" action="">
-            <button id="passa" onclick="window.location.reload();">Passa</button>
+            <button id="passa">Passa</button>
             <button id="miPiace" name="miPiace">Mi Piace</button>
         </form>
     </main>
+    <script>
+        // Ricarica la pagina al click del bottone "Passa"
+        document.getElementById("passa").addEventListener("click", function() {
+            location.reload();
+        });
+    </script>        
 
-    <footer>
-        <p>© 2023 Sito stile Tinder</p>
-    </footer
+</body>
+</html>
