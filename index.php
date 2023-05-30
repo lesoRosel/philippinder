@@ -9,7 +9,7 @@
                 <li><a href="index.php">Home</a></li>
                 <li><a href="profile.php">Profilo</a></li>
                 <li><a href="profile_edit.html">Modifica Profilo</a></li>
-                <li><a href="signin.html">Logout</a></li> <!-- Aggiunto il pulsante di logout -->
+                <li><a href="login.html">Logout</a></li> 
             </ul>
         </nav>
     </header>
@@ -59,8 +59,28 @@
                 // ID dell'utente randomizzato
                 $idUtenteRandomizzato = $rowProfilo['id_utente'];
 
-                // Aggiungi il match nel database al click del pulsante "Mi Piace"
-                if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['miPiace'])) {
+                // Controlla se ci sono interessi corrispondenti con valore "si"
+                $sqlInteressiUtenteLoggato = "SELECT cinema, musica, sport, lettura, viaggi FROM interessi WHERE id_utente = $idUtenteLoggato";
+                $resultInteressiUtenteLoggato = pg_query($conn, $sqlInteressiUtenteLoggato);
+                $interessiUtenteLoggato = pg_fetch_assoc($resultInteressiUtenteLoggato);
+
+                $sqlInteressiUtenteRandomizzato = "SELECT cinema, musica, sport, lettura, viaggi FROM interessi WHERE id_utente = $idUtenteRandomizzato";
+                $resultInteressiUtenteRandomizzato = pg_query($conn, $sqlInteressiUtenteRandomizzato);
+                $interessiUtenteRandomizzato = pg_fetch_assoc($resultInteressiUtenteRandomizzato);
+
+                $match = false;
+
+                $interessiColonne = ['cinema', 'musica', 'sport', 'lettura', 'viaggi'];
+
+                foreach ($interessiColonne as $colonna) {
+                    if ($interessiUtenteLoggato[$colonna] == "si" && $interessiUtenteRandomizzato[$colonna] == "si") {
+                        $match = true;
+                        break;
+                    }
+                }
+
+                // Aggiungi il match nel database solo se c'è un match
+                if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['miPiace']) && $match) {
                     // Inserisci il match nella tabella "match"
                     $sqlInsertMatch = "INSERT INTO \"match\" (id_utente_loggato, id_utente_match) VALUES ($idUtenteLoggato, $idUtenteRandomizzato)";
                     $resultInsertMatch = pg_query($conn, $sqlInsertMatch);
@@ -70,6 +90,8 @@
                     } else {
                         echo "<p>Errore nell'aggiunta del match.</p>";
                     }
+                } elseif ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['miPiace'])) {
+                    echo "<p>Nessun match trovato.</p>";
                 }
             } else {
                 echo "Nessun profilo trovato.";

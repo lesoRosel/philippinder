@@ -1,65 +1,96 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Helvetica Neue', sans-serif;
+    line-height: 1.6;
+    background-color: #f2f2f2;
+    color: #333;
+}
+
 .container {
-    max-width: 500px;
+    width: 80%;
+    max-width: 800px;
     margin: 0 auto;
     padding: 20px;
 }
 
-body {
-    background-color: rgba(255, 0, 0, 0.258); /* Rosso con opacità 0.5 */
-  }
+header {
+    background-color: #ff4081;
+    color: #fff;
+    padding: 20px 0;
+    text-align: center;
+}
+
 
 h1 {
-    text-align: center;
-}
-
-form {
-    text-align: center;
-}
-
-label {
-    font-weight: bold;
-}
-
-textarea, select, input[type="file"] {
-    width: 100%;
-    margin-bottom: 10px;
-}
-
-input[type="submit"] {
-    padding: 10px 20px;
-    background-color: #ff4081;
-    color: white;
-    border: 4px ridge #ff0000;
-    border-radius: 5px;
-    cursor: pointer;
+    font-size: 2.5rem;
 }
 
 nav ul {
     list-style-type: none;
-    margin: 0;
-    padding: 0;
-    
+    padding: 10px 0;
+    background-color: #ff4081;
+    text-align: center;
 }
 
 nav li {
     display: inline-block;
-    background-color: aqua;
 }
 
 nav a {
     display: block;
     padding: 10px 20px;
     text-decoration: none;
-    color: #333;
-    background-color: aqua;
+    color: #fff;
+    transition: background-color 0.3s ease-in-out;
 }
 
 nav a:hover {
-    background-color: #ccc;
+    background-color: #ff669a;
 }
-header {
+form {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0px 10px 20px 0px rgba(0, 0, 0, 0.1);
+}
+
+label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+textarea, select, input[type="file"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    transition: border-color 0.3s ease-in-out;
+}
+
+textarea:focus, select:focus, input[type="file"]:focus {
+    border-color: #ff4081;
+}
+
+input[type="submit"] {
+    display: block;
+    width: 100%;
+    padding: 10px;
     background-color: #ff4081;
-    color: white;
-    padding: 10px 0;
-    text-align: center;
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 1.1rem;
+    transition: background-color 0.3s ease-in-out;
+}
+
+input[type="submit"]:hover {
+    background-color: #ff669a;
 }

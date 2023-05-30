@@ -81,7 +81,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
 
-    echo "Modifica del profilo salvata!";
+    header("Location: profile_edit.html");
 }
 
 pg_close($conn);

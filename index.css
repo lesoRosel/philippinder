@@ -1,87 +1,98 @@
-body {
-    font-family: Arial, sans-serif;
+* {
+    box-sizing: border-box;
     margin: 0;
     padding: 0;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
     background-color: #f0f0f0;
+    line-height: 1.6;
+    color: #333;
 }
 
-header {
+header, footer {
     background-color: #ff4081;
-    color: white;
-    padding: 10px 0;
+    color: #fff;
+    padding: 20px 0;
     text-align: center;
 }
-
-#profilo {
-    width: 80%;
-    margin: 20px auto;
-    padding: 20px;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    background-color: white;
-    text-align: center;
-}
-
-button {
-    display: block;
-    margin: 20px auto;
-    padding: 10px 20px;
-    font-size: 18px;
-    border: none;
-    border-radius: 5px;
-    color: white;
-}
-
-#passa {
-    background-color: #ff4081;
-}
-
-#miPiace {
-    background-color: #4caf50;
-}
-
-footer {
-    background-color: #ff4081;
-    color: white;
-    text-align: center;
-    padding: 10px 0;
-    position: fixed;
-    width: 100%;
-    bottom: 0;
-}
-
 
 nav ul {
     list-style-type: none;
-    margin: 0;
-    padding: 0;
-    
+    padding: 10px 0;
+    background-color: #ff4081;
+    text-align: center;
 }
 
 nav li {
     display: inline-block;
-    background-color: aqua;
 }
 
 nav a {
     display: block;
     padding: 10px 20px;
     text-decoration: none;
-    color: #333;
-    background-color: aqua;
+    color: #fff;
+    transition: background-color 0.3s ease-in-out;
 }
 
 nav a:hover {
-    background-color: #ccc;
+    background-color: #ff669a;
 }
+
+#profilo {
+    width: 80%;
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background-color: #fff;
+    text-align: center;
+    box-shadow: 0px 10px 20px 0px rgba(0, 0, 0, 0.1);
+}
+
 img {
     width: 200px;
     height: 200px;
     border-radius: 50%;
     object-fit: cover;
-    align-items: center;
-    text-align: center;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 20px;
+    display: block;
+    margin: 20px auto;
+}
+
+button {
+    display: block;
+    width: 200px;
+    margin: 20px auto;
+    padding: 10px;
+    font-size: 1.1rem;
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+}
+
+#passa {
+    background-color: #ff4081;
+}
+
+#passa:hover {
+    background-color: #ff669a;
+}
+
+#miPiace {
+    background-color: #4caf50;
+}
+
+#miPiace:hover {
+    background-color: #66bb6a;
+}
+
+footer {
+    position: fixed;
+    width: 100%;
+    bottom: 0;
 }
