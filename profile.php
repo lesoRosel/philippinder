@@ -9,18 +9,38 @@ $password = "password";
 
 $conn = pg_connect("host=$host port=$port dbname=$dbname user=$user password=$password");
 
+
 if (!$conn) {
     die("Connessione al database fallita");
 }
 
 // Se viene inviato il comando 'rifiuta', esegui la query DELETE
 if (isset($_POST['rifiuta'])) {
-    $id_match = $_POST['id_match'];
-    $query = 'DELETE FROM match WHERE id = $1';
-    $result = pg_query_params($conn, $query, array($id_match));
+    $id_utente_loggato = $_SESSION['id_utente'];
+    $id_utente_match = $_POST['id_utente_match'];
+    
+    $query = 'DELETE FROM "match" WHERE id_utente_loggato = $1 AND id_utente_match = $2';
+    $result = pg_query_params($conn, $query, array($id_utente_loggato, $id_utente_match));
 
     if (!$result) {
         echo 'Errore durante l\'eliminazione del match: ' . pg_last_error($conn);
+    }
+}
+
+
+
+// Se viene inviata la data proposta, esegui l'aggiornamento della colonna "data_proposta" nella tabella "match"
+if (isset($_POST['invia_data_incontro'])) {
+    $id_utente_loggato = $_SESSION['id_utente'];
+    $id_utente_match = $_POST['id_utente_match'];
+    $data_proposta = $_POST['data_proposta'];
+    
+    // Esegui la query per aggiornare la colonna "data_proposta" nella tabella "match"
+    $query_update_data = 'UPDATE "match" SET data_proposta = $1 WHERE id_utente_loggato = $2 AND id_utente_match = $3';
+    $result_update_data = pg_query_params($conn, $query_update_data, array($data_proposta, $id_utente_loggato, $id_utente_match));
+    
+    if (!$result_update_data) {
+        echo 'Errore durante l\'aggiornamento della data proposta: ' . pg_last_error($conn);
     }
 }
 
@@ -55,12 +75,12 @@ if ($result) {
     exit;
 }
 
-// Esegui una query per ottenere i match dell'utente
-$query_match = "SELECT utente.nome, utente.data_nascita, profilo.foto
-                FROM Match
-                JOIN utente ON Match.id_utente_match = utente.id_utente
-                JOIN profilo ON Match.id_utente_match = profilo.id_profilo
-                WHERE Match.id_utente_loggato = $1";
+// Esegui una query per ottenere i match dell'utente, considerando solo quelli con data_proposta null
+$query_match = "SELECT utente.id_utente, utente.nome, utente.data_nascita, profilo.foto
+                FROM \"match\"
+                JOIN utente ON \"match\".id_utente_match = utente.id_utente
+                JOIN profilo ON \"match\".id_utente_match = profilo.id_profilo
+                WHERE \"match\".id_utente_loggato = $1 AND \"match\".data_proposta IS NULL";
 $result_match = pg_query_params($conn, $query_match, array($id_utente));
 
 if ($result_match) {
@@ -82,12 +102,21 @@ pg_close($conn);
 <head>
     <title>Profilo Utente</title>
     <link rel="stylesheet" type="text/css" href="profile.css">
+    <header>
+        <nav>
+            <ul>
+                <li><a href="index.php">Home</a></li>
+                <li><a href="profile.php">Profilo</a></li>
+                <li><a href="profile_edit.html">Modifica Profilo</a></li>
+            </ul>
+        </nav>
+    </header>
 </head>
 <body>
-    <div class="user-profile">
+    <div class="user-profile-rand">
         <h1>Il tuo profilo</h1>
         <!-- Mostra le informazioni del profilo dell'utente -->
-        <div class="user-profile">
+        <div class="user-profile_user">
         <div id="img">
             <?php
                 // Verifica se la foto esiste e stampala
@@ -114,19 +143,19 @@ pg_close($conn);
                 <p>Data di nascita: <?php echo $m['data_nascita']; ?></p>
 
                 <form action="" method="post">
-                    
-                    <input type="date" name="data_incontro">
-                    <input type="submit" value="Pianifica un incontro">
-                    <input type="submit" value="Rifiuta">
+                    <input type="hidden" name="id_utente_match" value="<?php echo $m['id_utente']; ?>">
+                    <input type="date" name="data_proposta">
+                    <input type="submit" name="invia_data_incontro" value="Pianifica un incontro">
+                    <input type="submit" name="rifiuta" value="Rifiuta">
                 </form>
-                <script>
-        // Ricarica la pagina al click del bottone "Passa"
-        document.getElementById("Rifiuta").addEventListener("click", function() {
-            location.reload();
-        });
-    </script>  
             </div>
         <?php endforeach; ?>
     </div>
+    <script>
+        // Ricarica la pagina al click del bottone "Rifiuta"
+        document.getElementById("Rifiuta").addEventListener("click", function() {
+            location.reload();
+        });
+    </script> 
 </body>
 </html>

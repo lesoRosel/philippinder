@@ -33,3 +33,33 @@ input[type="submit"] {
     border-radius: 5px;
     cursor: pointer;
 }
+
+nav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    
+}
+
+nav li {
+    display: inline-block;
+    background-color: aqua;
+}
+
+nav a {
+    display: block;
+    padding: 10px 20px;
+    text-decoration: none;
+    color: #333;
+    background-color: aqua;
+}
+
+nav a:hover {
+    background-color: #ccc;
+}
+header {
+    background-color: #ff4081;
+    color: white;
+    padding: 10px 0;
+    text-align: center;
+}

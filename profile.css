@@ -5,7 +5,17 @@ body {
     background-color: rgba(255, 0, 0, 0.258);
 }
 
-.user-profile {
+.user-profile_user {
+    width: 80%;
+    margin: 20px auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background-color: rgba(71, 0, 147, 0.096);
+    text-align: center;
+}
+
+.user-profile-rand {
     width: 80%;
     margin: 20px auto;
     padding: 20px;
@@ -36,4 +46,33 @@ body {
 
 .user-profile p {
     margin-bottom: 10px;
+}
+nav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    
+}
+
+nav li {
+    display: inline-block;
+    background-color: aqua;
+}
+
+nav a {
+    display: block;
+    padding: 10px 20px;
+    text-decoration: none;
+    color: #333;
+    background-color: aqua;
+}
+
+nav a:hover {
+    background-color: #ccc;
+}
+header {
+    background-color: #ff4081;
+    color: white;
+    padding: 10px 0;
+    text-align: center;
 }

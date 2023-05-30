@@ -30,10 +30,9 @@ if ($result && pg_num_rows($result) > 0) {
     $new_user_id = $row[4];
     // Registrare i dati dell'utente nella sessione
     $_SESSION['id_utente'] = $new_user_id;
-    
-    
-    echo "Accesso riuscito!";
     echo $_SESSION['id_utente'];
+    header("Location: index.php");
+    
 } else {
     // L'utente non esiste o la password è errata
     echo "Accesso fallito. Verifica le credenziali.";

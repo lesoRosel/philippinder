@@ -3,6 +3,16 @@
 <head>
     <title>Philippinder</title>
     <link rel="stylesheet" type="text/css" href="index.css">
+    <header>
+        <nav>
+            <ul>
+                <li><a href="index.php">Home</a></li>
+                <li><a href="profile.php">Profilo</a></li>
+                <li><a href="profile_edit.html">Modifica Profilo</a></li>
+                <li><a href="signin.html">Logout</a></li> <!-- Aggiunto il pulsante di logout -->
+            </ul>
+        </nav>
+    </header>
 </head>
 <body>
     <header>
@@ -25,26 +35,34 @@
                 die("Connessione al database fallita");
             }
 
+            // ID dell'utente loggato
+            session_start();
+            $idUtenteLoggato = $_SESSION['id_utente'];
+
+            if (!isset($_SESSION['id_utente'])) {
+                // L'utente non ha effettuato l'accesso, reindirizzalo alla pagina di login o mostra un messaggio di errore
+                header("Location: login.php"); // Modifica il percorso con la pagina di login
+                exit;
+            }
+
             // Seleziona un profilo casuale dalla tabella utente
-            $sqlRandomProfilo = "SELECT utente.nome, utente.data_nascita, profilo.foto, utente.id_utente FROM utente INNER JOIN profilo ON utente.id_utente = profilo.id_profilo ORDER BY RANDOM() LIMIT 1";
+            $sqlRandomProfilo = "SELECT utente.nome, utente.data_nascita, profilo.foto, profilo.biografia, utente.id_utente FROM utente INNER JOIN profilo ON utente.id_utente = profilo.id_profilo ORDER BY RANDOM() LIMIT 1";
             $resultRandomProfilo = pg_query($conn, $sqlRandomProfilo);
 
             if ($rowProfilo = pg_fetch_assoc($resultRandomProfilo)) {
                 echo "<h2>Informazioni del profilo:</h2>";
                 echo "<p>Nome: " . $rowProfilo['nome'] . "</p>";
                 echo "<p>Data di nascita: " . $rowProfilo['data_nascita'] . "</p>";
-                echo "<img src='" . $rowProfilo['foto'] . "' alt='Foto profilo'>";
+                echo "<p>Biografia: " . $rowProfilo['biografia'] . "</p>";
+                echo "<div><img src='" . $rowProfilo['foto'] . "' alt='Foto profilo'></div>";
 
-                // ID dell'utente loggato
-                session_start();
-                $idUtenteLoggato = $_SESSION['id_utente'];
                 // ID dell'utente randomizzato
                 $idUtenteRandomizzato = $rowProfilo['id_utente'];
 
                 // Aggiungi il match nel database al click del pulsante "Mi Piace"
                 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['miPiace'])) {
-                    // Inserisci il match nella tabella "Match"
-                    $sqlInsertMatch = "INSERT INTO \"Match\" (id_utente_loggato, id_utente_match) VALUES ($idUtenteLoggato, $idUtenteRandomizzato)";
+                    // Inserisci il match nella tabella "match"
+                    $sqlInsertMatch = "INSERT INTO \"match\" (id_utente_loggato, id_utente_match) VALUES ($idUtenteLoggato, $idUtenteRandomizzato)";
                     $resultInsertMatch = pg_query($conn, $sqlInsertMatch);
 
                     if ($resultInsertMatch) {
@@ -72,6 +90,5 @@
             location.reload();
         });
     </script>        
-
 </body>
 </html>

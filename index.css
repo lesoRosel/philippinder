@@ -19,6 +19,7 @@ header {
     border: 1px solid #ddd;
     border-radius: 10px;
     background-color: white;
+    text-align: center;
 }
 
 button {
@@ -47,4 +48,40 @@ footer {
     position: fixed;
     width: 100%;
     bottom: 0;
+}
+
+
+nav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    
+}
+
+nav li {
+    display: inline-block;
+    background-color: aqua;
+}
+
+nav a {
+    display: block;
+    padding: 10px 20px;
+    text-decoration: none;
+    color: #333;
+    background-color: aqua;
+}
+
+nav a:hover {
+    background-color: #ccc;
+}
+img {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    object-fit: cover;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
 }
